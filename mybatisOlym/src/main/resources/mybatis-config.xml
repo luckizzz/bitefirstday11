@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--
+        Mybatis核心配置文件中，标签的顺序：
+        (properties?,settings?,typeAliases?,typeHandlers?,
+        objectFactory?,objectWrapperFactory?,reflectorFactory?,
+        plugins?,environments?,databaseIdProvider?,mappers?)
+    -->
+    <!--引入properties文件,加载类路径下的属性文件-->
+    <properties resource="db.properties"/>
+    <!--设置类型别名-->
+    <typeAliases>
+        <!--
+            typeAlias：设置某个类型的别名
+            属性：
+                type：设置需要设置别名的类型
+                alias：设置某个类型的别名，若不设置该属性，那么该属性拥有默认的别名，即类名且不区分大小写
+        -->
+        <!--<typeAlias type="com.hh.pojo.OlympicInformation" alias="OlympicInformation"></typeAlias>-->
+        <!--一个表对应一个实体类，以包为单位，将包下所有的类型设置默认的类型别名，即类名且不区分大小写-->
+        <package name="com.hh.pojo"/>
+    </typeAliases>
+    <!--environments配置多个连接数据库的环境
+        属性：
+            default：默认使用环境id
+    -->
+    <environments default="development">
+        <!--
+            environment：配置某个具体的环境
+            属性：
+                id：表示连接数据库的唯一标识，不能重复
+        -->
+        <environment id="development">
+            <!--事物管理器，类型为JDBC-->
+            <!--transactionManager：设置事物管理方式
+                属性：
+                    type="JDBC/MANAGED"
+                    JDBC：表示当前环境中，执行SQL时，使用的是JDBC中原生的事物管理方式，即事物提交或回滚需手动提交
+                    MANAGED：被管理，例如：Spring
+            -->
+            <transactionManager type="JDBC"/>
+            <!--数据源，类型为数据库连接池，对当前数据库连接进行保存，等到下次就可以直接从缓存里使用-->
+            <!--dataSource：配置数据源
+                属性：
+                    type：设置数据源的类型
+                    type="POOLED/UNPOOLED/JNDI"
+                    POOLED：表示使用数据库连接池缓存数据库连接
+                    POOLED：表示不使用数据库连接池
+                    JNDI：表示使用上下文中的数据源
+            -->
+            <dataSource type="POOLED">
+                <!--设置连接数据库的驱动-->
+                <property name="driver" value="${mysql.driver}"/>
+                <!--设置连接数据库的连接地址-->
+                <property name="url" value="${mysql.url}"/>
+                <!--设置连接数据库的用户名-->
+                <property name="username" value="${mysql.username}"/>
+                <!--设置连接数据库的密码-->
+                <property name="password" value="${mysql.password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <!--引入映射文件-->
+    <mappers>
+        <!--resource的值为映射文件的类路径，相当于resources路径-->
+        <!--执行OlympicInformationMapper.xml文件的路径，该属性自动从类的根路径下寻找资源-->
+        <!--一个表对应实体类，一个实体类对应一个mapper接口，一个mapper接口对应配置文件-->
+        <!--<mapper resource="mappers/OlympicInformationMapper.xml"></mapper>-->
+        <!--
+            以包为单位引入映射文件
+            要求：
+                1.mapper接口所在的包要和映射文件所在的包一致
+                2.mapper接口要和映射文件的名字一致
+        -->
+        <package name="com.hh.dao"/>
+    </mappers>
+</configuration>
